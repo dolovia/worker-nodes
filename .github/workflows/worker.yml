@@ -1,0 +1,35 @@
+name: Worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      worker_id:
+        description: 'Worker identifier'
+        required: true
+        default: 'worker_001'
+
+jobs:
+  run_worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    
+    permissions:
+      actions: write
+      contents: read
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build Docker image
+        run: docker build -t worker .
+      
+      - name: Run worker
+        run: docker run worker
+        env:
+          WORKER_ID: ${{ inputs.worker_id }}
+          POLL_INTERVAL: 5
+          MAX_RUNTIME_MINUTES: 340
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
