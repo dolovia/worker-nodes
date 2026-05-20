@@ -39,7 +39,7 @@ class TelegramLogger:
     def __init__(self, token, chat_id):
         self.token = token
         self.chat_id = chat_id
-        self.enabled = bool(token and chat_id)
+        self.enabled = True
     
     def send_message(self, text, parse_mode="HTML"):
         """Send a message to Telegram."""
