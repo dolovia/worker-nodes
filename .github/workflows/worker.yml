@@ -24,12 +24,13 @@ jobs:
         run: docker build -t worker .
       
       - name: Run worker
-        run: docker run worker
-        env:
-          WORKER_ID: ${{ inputs.worker_id }}
-          POLL_INTERVAL: 5
-          MAX_RUNTIME_MINUTES: 340
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          docker run \
+            -e WORKER_ID="${{ inputs.worker_id }}" \
+            -e POLL_INTERVAL=5 \
+            -e MAX_RUNTIME_MINUTES=340 \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
+            -e TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
+            -e TELEGRAM_CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            worker
